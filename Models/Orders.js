@@ -16,6 +16,9 @@ const OrdersSchema = new mongoose.Schema({
   category: {
     type: String,
   },
+  cname: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("orders", OrdersSchema);

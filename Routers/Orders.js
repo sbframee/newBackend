@@ -20,21 +20,29 @@ router.post("/postOrder", async (req, res) => {
 });
 
 router.get("/GetOrderList", async (req, res) => {
-    try {
-      let data = await Orders.find({});
+  try {
+    let data = await Orders.find({});
   
-      if (data.length)
-        res.json({ success: true, result: data.filter((a) => a.order_id) });
-      else res.json({ success: false, message: "Name Not found" });
-    } catch (err) {
-      res.status(500).json({ success: false, message: err });
+    if (data.length) {
+      // Extract unique categories
+      const uniqueCategories = [...new Set(data.map((order) => order.category))];
+      
+      // Filter orders with unique categories
+      const filteredData = data.filter((order) => order.category && uniqueCategories.includes(order.category));
+      
+      res.json({ success: true, result: filteredData });
+    } else {
+      res.json({ success: false, message: "No orders found" });
     }
-  });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err });
+  }
+});
   
 
   router.get('/GetOrder/:order_uuid', async (req, res) => {
     try {
-      const order = await Oders.findOne({ order_uuid: req.params.order_uuid });
+      const order = await Orders.findOne({ order_uuid: req.params.order_uuid });
   
       if (!order) {
         return res.status(404).json({ success: false, message: 'Order not found' });
@@ -47,4 +55,29 @@ router.get("/GetOrderList", async (req, res) => {
     }
   });
 
+  router.put("/orders/putOrders/:orderId", async (req, res) => {
+    try {
+      const orderId = req.params.orderId;
+      const { category, cname } = req.body;
+  
+      if (!category || !cname) {
+        return res.status(400).json({ success: false, message: "Invalid data" });
+      }
+  
+      const response = await Orders.findOneAndUpdate(
+        { order_id: orderId },
+        { $set: { category, cname } },
+        { new: true }
+      );
+  
+      if (response) {
+        res.json({ success: true, message: "Order updated successfully" });
+      } else {
+        res.status(404).json({ success: false, message: "Order not found" });
+      }
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Failed to update order", error: err.message });
+    }
+  });
+  
 module.exports = router;
