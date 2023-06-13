@@ -4,6 +4,7 @@ const connectDB = require("./mongodb");
 const Users = require("./Routers/Users");
 const Orders = require("./Routers/Orders");
 const Actions = require("./Routers/Actions");
+const Customers = require("./Routers/Customers");
 
 const app = express()
 app.use(express.json())
@@ -16,5 +17,6 @@ connectDB();
 app.use("/users", Users);
 app.use("/orders", Orders);
 app.use("/actions", Actions);
+app.use("/customers", Customers)
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

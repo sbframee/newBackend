@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { v4: uuid } = require("uuid");
 const Orders = require("../Models/Orders");
+const Customers = require("../Models/Customers");
 
 router.post("/postOrder", async (req, res) => {
   try {
@@ -40,22 +41,42 @@ router.get("/GetOrderList", async (req, res) => {
 });
   
 
-  router.get('/GetOrder/:order_uuid', async (req, res) => {
-    try {
-      const order = await Orders.findOne({ order_uuid: req.params.order_uuid });
-  
-      if (!order) {
-        return res.status(404).json({ success: false, message: 'Order not found' });
-      }
-  
-      res.json({ success: true, result: user });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-  });
+  router.get('/GetOrderDetails/:selectedOrderId', async (req, res) => {
+    const selectedOrderId = req.params.selectedOrderId;
 
-  router.put("/orders/putOrders/:orderId", async (req, res) => {
+  try {
+    // Fetch the case details from the database based on the selectedOrderId
+    const orderDetails = await Orders.findOne({ order_id: selectedOrderId }).exec();
+
+    if (!orderDetails) {
+      return res.status(404).json({ error: 'Order details not found' });
+    }
+
+    // Fetch the customer details based on the retrieved customer_uuid
+    const customerDetails = await Customers.findOne({ customer_uuid: orderDetails.customer_uuid }).exec();
+
+    if (!customerDetails) {
+      return res.status(404).json({ error: 'Customer details not found' });
+    }
+
+    // Include the customer_uuid and other case details in the response
+    const response = {
+      order_id: orderDetails.order_id,
+      customer_uuid: orderDetails.customer_uuid,
+      customer_name: customerDetails.customer_name,
+      customer_mobile: customerDetails.customer_mobile,
+      // Include other case details as needed
+    };
+
+    // Send the case details as the response
+    res.json({ result: response });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+  router.put("/putOrders/:orderId", async (req, res) => {
     try {
       const orderId = req.params.orderId;
       const { category, cname } = req.body;

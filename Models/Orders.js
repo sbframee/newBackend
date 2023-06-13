@@ -4,10 +4,7 @@ const OrdersSchema = new mongoose.Schema({
   order_uuid: {
     type: String,
   },
-  name: {
-    type: String,
-  },
-  mobile: {
+  customer_uuid: {
     type: String,
   },
   order_id: {
