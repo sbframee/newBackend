@@ -3,7 +3,8 @@ const express = require("express");
 const connectDB = require("./mongodb");
 const Users = require("./Routers/Users");
 const Orders = require("./Routers/Orders");
-const Actions = require("./Routers/Actions");
+const Categories = require("./Routers/Categories");
+const Category_names = require("./Routers/Category_names");
 const Customers = require("./Routers/Customers");
 
 const app = express()
@@ -16,7 +17,8 @@ connectDB();
 
 app.use("/users", Users);
 app.use("/orders", Orders);
-app.use("/actions", Actions);
+app.use("/categories", Categories);
+app.use("/category_names", Category_names);
 app.use("/customers", Customers)
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
