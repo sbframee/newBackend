@@ -10,7 +10,7 @@ const CustomersSchema = new mongoose.Schema({
   customer_mobile: {
     type: Number,
   },
-  customer_gender: {
+  group: {
     type: String,
   },
   dob: {

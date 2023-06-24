@@ -7,6 +7,9 @@ const OrdersSchema = new mongoose.Schema({
   customer_uuid: {
     type: String,
   },
+  item_uuid: {
+    type: String,
+  },
   order_id: {
     type: Number,
   },
