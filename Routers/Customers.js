@@ -69,7 +69,7 @@ router.put("/putCustomers", async (req, res) => {
       );
       if (response.acknowledged) {
         result.push({ success: true, result: value });
-      } else result.push({ success: false, message: "Item Not created" });
+      } else result.push({ success: false, message: "Customer Not created" });
     }
     res.json({ success: true, result });
   } catch (err) {

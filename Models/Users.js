@@ -4,15 +4,19 @@ const UsersSchema = new mongoose.Schema({
   user_uuid: {
     type: String,
   },
-  name: {
+  user_name: {
     type: String,
   },
-  password: {
+  user_password: {
     type: String,
   },
-  user_type: {
+  user_role: {
     type: String,
   },
+  user_group: {
+    type: String,
+  },
+
 });
 
 module.exports = mongoose.model("users", UsersSchema);
