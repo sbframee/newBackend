@@ -10,15 +10,21 @@ const OrdersSchema = new mongoose.Schema({
   item_uuid: {
     type: String,
   },
+  supplier_uuid: {
+    type: String,
+  },
   order_id: {
     type: Number,
   },
   category: {
     type: String,
   },
-  cname: {
+  category_name: {
     type: String,
   },
+  date: {
+    type: String,
+  }
 });
 
-module.exports = mongoose.model("orders", OrdersSchema);
+module.exports = mongoose.model("Orders", OrdersSchema);

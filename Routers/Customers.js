@@ -42,7 +42,7 @@ router.get('/getCustomerDetails/:customer_uuid', async (req, res) => {
     if (customerDetails) {
       res.json({ success: true, result: customerDetails });
     } else {
-      res.json({ success: false, message: 'Customer details not found' });
+      res.json({ success: false, result: null });
     }
   } catch (error) {
     console.error(error);

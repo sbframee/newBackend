@@ -7,7 +7,7 @@ const ItemsSchema = new mongoose.Schema({
   item_name: {
     type: String,
   },
-  group: {
+  item_group: {
     type: String,
   },
 });

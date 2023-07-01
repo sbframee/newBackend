@@ -33,6 +33,24 @@ router.get("/GetItemList", async (req, res) => {
   }
 });
 
+router.get('/getItemDetails/:item_uuid', async (req, res) => {
+  const item_uuid = req.params.item_uuid;
+
+  try {
+    const itemDetails = await Items.findOne({ item_uuid });
+
+    if (itemDetails) {
+      res.json({ success: true, result: itemDetails });
+    } else {
+      res.json({ success: false, result: null });
+    }
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: 'Error fetching item details' });
+  }
+});
+
+
 router.put("/putItems", async (req, res) => {
   try {
     let result = [];

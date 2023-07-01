@@ -33,6 +33,24 @@ router.get("/GetSupplierList", async (req, res) => {
   }
 });
 
+router.get('/getSupplierDetails/:supplier_uuid', async (req, res) => {
+  const supplier_uuid = req.params.supplier_uuid;
+
+  try {
+    const supplierDetails = await Suppliers.findOne({ supplier_uuid });
+
+    if (supplierDetails) {
+      res.json({ success: true, result: supplierDetails });
+    } else {
+      res.json({ success: false, result: null });
+    }
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: 'Error fetching supplier details' });
+  }
+});
+
+
 router.put("/putSuppliers", async (req, res) => {
   try {
     let result = [];
