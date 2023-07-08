@@ -1,33 +1,54 @@
 const express = require("express");
-
+const multer = require("multer");
 const router = express.Router();
 const { v4: uuid } = require("uuid");
 const Items = require("../Models/Items");
 
-router.post("/postItem", async (req, res) => {
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'uploads');
+  },
+  filename(req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.post("/postItem", upload.single("image"), async (req, res) => {
   try {
     let value = req.body;
-    if (!value) res.json({ success: false, message: "Invalid Data" });
-    value = { ...value, item_uuid: uuid() };
+    if (!value) {
+      return res.json({ success: false, message: "Invalid Data" });
+    }
+
+    if (!req.file) {
+      return res.json({ success: false, message: "No image provided" });
+    }
+
+    const imageName = req.file.filename;
+
+    value = { ...value, item_uuid: uuid(), image: imageName };
 
     let response = await Items.create(value);
     if (response) {
-      res.json({ success: true, result: response });
-    } else res.json({ success: false, message: "Item Not created" });
-  } 
-  catch (err) {
-    console.error(err); 
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+      return res.json({ success: true, result: response });
+    } else {
+      return res.json({ success: false, message: "Item not created" });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
 
-router.get("/GetItemList", async (req, res) => {
+router.get('/GetItemList', async (req, res) => {
   try {
     let data = await Items.find({});
 
     if (data.length)
       res.json({ success: true, result: data.filter((a) => a.item_name) });
-    else res.json({ success: false, message: "Name Not found" });
+    else res.json({ success: false, message: "Item Not found" });
   } catch (err) {
     res.status(500).json({ success: false, message: err });
   }

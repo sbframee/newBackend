@@ -26,5 +26,6 @@ app.use("/customers", Customers);
 app.use("/groups", Groups);
 app.use("/items", Items);
 app.use("/suppliers", Suppliers);
+app.use('/uploads', express.static('uploads'));
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
